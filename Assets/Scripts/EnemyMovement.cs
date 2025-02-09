@@ -8,16 +8,14 @@ public class EnemyMovement : MonoBehaviour
     private MovementType movementType;
     private float startTime;
     private Vector3 startPoint;
-    private Vector3 control1, control2, midPoint, control3, control4; // Control points for bezier curves
+    private Vector3 control1, control2, midPoint, control3, control4;
 
-    // Adjustable movement properties
     [SerializeField] private float quadraticSpeed = 4f;  
     [SerializeField] private float cubicSpeed = 4f;      
     [SerializeField] private float quadraticJourneyTime = 4.5f; 
     [SerializeField] private float cubicJourneyTime = 5f;   
 
-    // Randomness range for control points
-    [SerializeField] private float controlPointRange = 3f; // Range within which control points will be random
+    
 
     public void Initialize(Transform targetLocation, MovementType moveType)
     {
@@ -31,7 +29,7 @@ public class EnemyMovement : MonoBehaviour
 
         control1 = startPoint + new Vector3(offsetX, -offsetY * 1f, 0);
         control2 = startPoint + new Vector3(offsetX * 2, offsetY * 2.5f, 0);
-        midPoint = (startPoint + target.position) / 2; // Midpoint between start and end
+        midPoint = (startPoint + target.position) / 2;
         control3 = startPoint + new Vector3(offsetX * 4, -offsetY * 1f, 0);
         control4 = startPoint + new Vector3(offsetX * 6, offsetY * 2.5f, 0);
     }
@@ -42,7 +40,8 @@ public class EnemyMovement : MonoBehaviour
         float speed = (movementType == MovementType.Quadratic) ? quadraticSpeed : cubicSpeed;
         
         float t = (Time.time - startTime) / journeyTime;
-        t = Mathf.Clamp01(t); // Ensure t stays in range [0,1]
+        t = Mathf.Clamp01(t);
+        t = TweenUtils.EaseOut(t); // Default easing to EaseIn
 
         if (t >= 1f)
         {
@@ -59,7 +58,7 @@ public class EnemyMovement : MonoBehaviour
                 transform.position = CubicBezier(startPoint, control1, control2, target.position, t);
                 break;
             case MovementType.DoubleCubic:
-                transform.position = DoubleCubicBezier(startPoint, control1, control2, midPoint, control3, control4,target.position, t);
+                transform.position = DoubleCubicBezier(startPoint, control1, control2, midPoint, control3, control4, target.position, t);
                 break;
         }
     }
@@ -84,28 +83,27 @@ public class EnemyMovement : MonoBehaviour
     {
         if (t < 0.5f)
         {
-            float newT = t * 2; // Normalize t for the first curve (0 to 1)
+            float newT = t * 2;
             return CubicBezier(start, control1, control2, midPoint, newT);
         }
         else
         {
-            float newT = (t - 0.5f) * 2; // Normalize t for the second curve (0 to 1)
+            float newT = (t - 0.5f) * 2;
             return CubicBezier(midPoint, control3, control4, end, newT);
         }
     }
 
-
     private void ReachTarget()
     {
-        GameManager.Instance.TakeDamage();
+        // Destroy enemy
         Destroy(gameObject);
     }
-    
+
+
     void OnDrawGizmos()
     {
         if (target == null) return;
 
-        // Draw control points
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(startPoint, 0.1f);
         Gizmos.DrawSphere(control1, 0.1f);
@@ -115,7 +113,6 @@ public class EnemyMovement : MonoBehaviour
         Gizmos.DrawSphere(control4, 0.1f);
         Gizmos.DrawSphere(target.position, 0.1f);
 
-        // Draw curve
         Gizmos.color = Color.green;
         Vector3 prev = startPoint;
         for (float i = 0; i <= 1; i += 0.05f)
@@ -125,6 +122,4 @@ public class EnemyMovement : MonoBehaviour
             prev = point;
         }
     }
-
-
 }

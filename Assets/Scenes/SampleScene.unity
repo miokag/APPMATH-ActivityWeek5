@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 28398141}
   - component: {fileID: 28398140}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: AttackSpeedText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -203,8 +203,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 17
-  m_fontSizeBase: 17
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 45828413}
   - component: {fileID: 45828412}
   m_Layer: 5
-  m_Name: Text (TMP) (3)
+  m_Name: BulletDistanceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,8 +426,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 17
-  m_fontSizeBase: 17
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -464,7 +464,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -48.917183, y: 0, z: -121.79497, w: 19.9218}
+  m_margin: {x: 57.770737, y: 0, z: -12.0336685, w: 19.9218}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1880,7 +1880,7 @@ GameObject:
   - component: {fileID: 941260691}
   - component: {fileID: 941260690}
   m_Layer: 5
-  m_Name: Text (TMP) (2)
+  m_Name: TowerRangeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1952,8 +1952,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 17
-  m_fontSizeBase: 17
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2247,8 +2247,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2470,8 +2470,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2570,7 +2570,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1247560208
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2635,7 +2635,7 @@ Transform:
   m_GameObject: {fileID: 1247560207}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.367, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2694,6 +2694,7 @@ MonoBehaviour:
   goldText: {fileID: 241333593}
   gameOverUI: {fileID: 902256988}
   shopUI: {fileID: 1783216190}
+  goldPrefab: {fileID: 1397196586136454545, guid: 923d80e6f68c6c2459a965d4c38a7e3a, type: 3}
   enemySpawner: {fileID: 2022449005}
 --- !u!4 &1534114167
 Transform:
@@ -2738,6 +2739,9 @@ MonoBehaviour:
   speedUpgradeCost: 10
   rangeUpgradeCost: 15
   killDistanceUpgradeCost: 20
+  speedText: {fileID: 28398140}
+  rangeText: {fileID: 941260690}
+  killDistanceText: {fileID: 45828412}
   turret: {fileID: 1247560210}
 --- !u!1 &1790803752
 GameObject:
@@ -3008,8 +3012,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,8 +14,18 @@ public class ShopBehavior : MonoBehaviour
     [SerializeField] private int rangeUpgradeCost = 15;
     [SerializeField] private int killDistanceUpgradeCost = 20;
 
+    [Header("Upgrade Labels")]
+    [SerializeField] private TextMeshProUGUI speedText;
+    [SerializeField] private TextMeshProUGUI rangeText;
+    [SerializeField] private TextMeshProUGUI killDistanceText;
+
     [Header("Turret Stats")]
     [SerializeField] private TurretBehavior turret; // Reference to the turret
+
+    private int speedLevel = 1;
+    private int rangeLevel = 1;
+    private int killDistanceLevel = 1;
+    private const int maxLevel = 5;
 
     private void Start()
     {
@@ -22,87 +33,85 @@ public class ShopBehavior : MonoBehaviour
         speedButton.onClick.AddListener(UpgradeSpeed);
         rangeButton.onClick.AddListener(UpgradeRange);
         killDistanceButton.onClick.AddListener(UpgradeKillDistance);
+
+        // Initialize UI text
+        UpdateUpgradeTexts();
     }
 
     private void Update()
     {
-        // Dynamically update button interactability based on available gold
+        // Dynamically update button interactability based on available gold and levels
         UpdateButtonState();
     }
 
     private void UpdateButtonState()
     {
-        // Check if there is enough gold for each upgrade and update the button state
-        bool canUpgradeSpeed = GameManager.Instance.gold >= speedUpgradeCost;
-        bool canUpgradeRange = GameManager.Instance.gold >= rangeUpgradeCost;
-        bool canUpgradeKillDistance = GameManager.Instance.gold >= killDistanceUpgradeCost;
+        bool canUpgradeSpeed = GameManager.Instance.gold >= speedUpgradeCost && speedLevel < maxLevel;
+        bool canUpgradeRange = GameManager.Instance.gold >= rangeUpgradeCost && rangeLevel < maxLevel;
+        bool canUpgradeKillDistance = GameManager.Instance.gold >= killDistanceUpgradeCost && killDistanceLevel < maxLevel;
 
-        SetButtonState(speedButton, canUpgradeSpeed);
-        SetButtonState(rangeButton, canUpgradeRange);
-        SetButtonState(killDistanceButton, canUpgradeKillDistance);
+        SetButtonState(speedButton, canUpgradeSpeed, speedLevel);
+        SetButtonState(rangeButton, canUpgradeRange, rangeLevel);
+        SetButtonState(killDistanceButton, canUpgradeKillDistance, killDistanceLevel);
     }
 
-    private void SetButtonState(Button button, bool canUpgrade)
+    private void SetButtonState(Button button, bool canUpgrade, int level)
     {
-        // Disable or enable button based on the canUpgrade condition
         button.interactable = canUpgrade;
+        TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
 
-        // Change button color to gray if not interactable
+        if (level >= maxLevel)
+        {
+            buttonText.text = "Fully Upgraded"; // Change text when max level is reached
+            button.interactable = false;
+        }
+
         ColorBlock colors = button.colors;
-        if (canUpgrade)
-        {
-            colors.normalColor = Color.white; // Active color (can be set to any color you want)
-            colors.disabledColor = Color.gray; // Disabled color
-        }
-        else
-        {
-            colors.normalColor = Color.gray; // Gray color when not enough gold
-        }
+        colors.normalColor = canUpgrade ? Color.white : Color.gray;
+        colors.disabledColor = Color.gray;
         button.colors = colors;
     }
 
     private void UpgradeSpeed()
     {
-        if (GameManager.Instance.gold >= speedUpgradeCost)
+        if (GameManager.Instance.gold >= speedUpgradeCost && speedLevel < maxLevel)
         {
-            GameManager.Instance.gold -= speedUpgradeCost; // Deduct gold
-            turret.UpgradeSpeed(1); 
-            Debug.Log("Speed upgraded!");
+            GameManager.Instance.gold -= speedUpgradeCost;
+            turret.UpgradeSpeed(1);
+            speedLevel++;
+            UpdateUpgradeTexts();
             GameManager.Instance.UpdateUI();
-        }
-        else
-        {
-            Debug.Log("Not enough gold to upgrade speed.");
         }
     }
 
     private void UpgradeRange()
     {
-        if (GameManager.Instance.gold >= rangeUpgradeCost)
+        if (GameManager.Instance.gold >= rangeUpgradeCost && rangeLevel < maxLevel)
         {
-            GameManager.Instance.gold -= rangeUpgradeCost; // Deduct gold
-            turret.UpgradeRange(0.3f); 
-            Debug.Log("Range upgraded!");
+            GameManager.Instance.gold -= rangeUpgradeCost;
+            turret.UpgradeRange(0.3f);
+            rangeLevel++;
+            UpdateUpgradeTexts();
             GameManager.Instance.UpdateUI();
-        }
-        else
-        {
-            Debug.Log("Not enough gold to upgrade range.");
         }
     }
 
     private void UpgradeKillDistance()
     {
-        if (GameManager.Instance.gold >= killDistanceUpgradeCost)
+        if (GameManager.Instance.gold >= killDistanceUpgradeCost && killDistanceLevel < maxLevel)
         {
-            GameManager.Instance.gold -= killDistanceUpgradeCost; // Deduct gold
-            turret.UpgradeKillDistance(0.2f); 
-            Debug.Log("Kill distance upgraded!");
+            GameManager.Instance.gold -= killDistanceUpgradeCost;
+            turret.UpgradeKillDistance(0.2f);
+            killDistanceLevel++;
+            UpdateUpgradeTexts();
             GameManager.Instance.UpdateUI();
         }
-        else
-        {
-            Debug.Log("Not enough gold to upgrade kill distance.");
-        }
+    }
+
+    private void UpdateUpgradeTexts()
+    {
+        speedText.text = "Attack Speed Lvl. " + speedLevel;
+        rangeText.text = "Tower Range Lvl. " + rangeLevel;
+        killDistanceText.text = "Bullet Kill Distance Lvl. " + killDistanceLevel;
     }
 }

@@ -108,19 +108,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34f4f7a5720140d4b8e988f63d31f699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  points:
-  - {fileID: 4750857294239102523}
-  - {fileID: 4572379590320238610}
-  - {fileID: 4433383669686355660}
-  - {fileID: 8237630107405387032}
-  - {fileID: 2743117007194231940}
-  - {fileID: 2772202166192287005}
-  - {fileID: 4005500842801367012}
-  - {fileID: 8773828926026821511}
-  pointsreal: []
+  quadraticSpeed: 4
+  cubicSpeed: 4
   quadraticJourneyTime: 4.5
   cubicJourneyTime: 5
-  quinticJourneyTime: 6
+  GoldDropPrefab: {fileID: 1397196586136454545, guid: 923d80e6f68c6c2459a965d4c38a7e3a, type: 3}
 --- !u!1 &2623624074938202159
 GameObject:
   m_ObjectHideFlags: 0

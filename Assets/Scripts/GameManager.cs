@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,10 +12,11 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI goldText;
     public GameObject gameOverUI;
     public GameObject shopUI;
-    
-    private bool isPaused = false;
+    public GameObject goldPrefab;
 
-    public EnemySpawner enemySpawner; // Reference to the spawner
+    private bool isPaused = false;
+    private bool isAnimating = false; // Prevents toggling during animation
+    public EnemySpawner enemySpawner;
 
     void Awake()
     {
@@ -27,30 +29,60 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Text fields not assigned in the Inspector.");
         }
+
+        shopUI.transform.localScale = Vector3.zero; // Start with UI hidden
+        shopUI.SetActive(false);
     }
-    
+
     public void PauseGame()
     {
-        isPaused = !isPaused;  // Toggle the pause state
+        if (isAnimating) return; // Prevent multiple toggles during animation
+
+        isPaused = !isPaused; 
 
         if (isPaused)
         {
-            Time.timeScale = 0f;  // Pauses the game
-            shopUI.SetActive(true);  // Show the shop UI
+            StartCoroutine(AnimateUI(shopUI, Vector3.zero, Vector3.one, 0.3f, true)); // Scale up, then pause
         }
         else
         {
-            Time.timeScale = 1f;  // Resumes the game
-            shopUI.SetActive(false);  // Hide the shop UI
+            StartCoroutine(AnimateUI(shopUI, Vector3.one, Vector3.zero, 0.3f, false)); // Scale down, then unpause
         }
     }
 
+    private IEnumerator AnimateUI(GameObject ui, Vector3 startScale, Vector3 endScale, float duration, bool pauseAfter)
+    {
+        isAnimating = true;
+        ui.SetActive(true);
+        float timeElapsed = 0f;
+
+        while (timeElapsed < duration)
+        {
+            timeElapsed += Time.unscaledDeltaTime; // Use unscaled time to keep animation smooth
+            float t = TweenUtils.EaseOut(timeElapsed / duration);
+            ui.transform.localScale = Vector3.Lerp(startScale, endScale, t);
+            yield return null;
+        }
+
+        ui.transform.localScale = endScale;
+        isAnimating = false;
+
+        if (pauseAfter)
+        {
+            Time.timeScale = 0f; // Pause the game after the animation completes
+        }
+        else
+        {
+            Time.timeScale = 1f; // Resume after closing animation
+            ui.SetActive(false);
+        }
+    }
 
     void Start()
     {
         if (enemySpawner == null)
         {
-            enemySpawner = FindObjectOfType<EnemySpawner>(); // Auto-assign if not set
+            enemySpawner = FindObjectOfType<EnemySpawner>();
         }
         UpdateUI();
     }
@@ -58,7 +90,7 @@ public class GameManager : MonoBehaviour
     public void TakeDamage()
     {
         playerHP--;
-        UpdateUI();  // Ensure the UI is updated
+        UpdateUI();
         if (playerHP <= 0)
         {
             GameOver();
@@ -67,10 +99,25 @@ public class GameManager : MonoBehaviour
 
     public void AddGold(int amount)
     {
+        StartCoroutine(LerpGoldUI(gold, gold + amount));
         gold += amount;
-        UpdateUI();  // Ensure the UI is updated
     }
+    
+    private IEnumerator LerpGoldUI(int startValue, int endValue)
+    {
+        float duration = 0.5f;
+        float elapsed = 0f;
 
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            int newGold = (int)Mathf.Lerp(startValue, endValue, elapsed / duration);
+            goldText.text = "Gold: " + newGold;
+            yield return null;
+        }
+
+        goldText.text = "Gold: " + endValue;
+    }
 
     public void UpdateUI()
     {
@@ -84,12 +131,11 @@ public class GameManager : MonoBehaviour
         {
             enemySpawner.StopSpawning();
         }
-        
-        // Destroy all active enemies
+
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemies)
         {
-            Destroy(enemy);  // Destroy each enemy
+            Destroy(enemy);
         }
 
         hpText.text = "HP: 0";

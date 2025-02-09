@@ -33,7 +33,15 @@ public class BulletBehavior : MonoBehaviour
             Destroy(targetTransform.gameObject);
             if (GameManager.Instance != null)  
             {
-                GameManager.Instance.AddGold(5); 
+                // Spawn gold drop
+                Debug.Log("Instantiating gold drop at: " + transform.position);
+                GameObject goldDrop = Instantiate(GameManager.Instance.goldPrefab, transform.position, Quaternion.identity);
+
+                // Get reference to UI target (goldText position)
+                Transform goldUI = GameManager.Instance.goldText.transform;
+    
+                // Initialize gold drop movement
+                goldDrop.GetComponent<GoldDrop>().Initialize(goldUI, 10); // Example: 10 gold
             }
         }
 
