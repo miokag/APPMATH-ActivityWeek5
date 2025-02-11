@@ -1782,7 +1782,7 @@ GameObject:
   - component: {fileID: 802881407}
   - component: {fileID: 802881406}
   m_Layer: 0
-  m_Name: QuinticSpawn
+  m_Name: DoubleCubicSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2910,7 +2910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 2356625225954155860, guid: 0a42ccb7268fcee4c9d056edbc6e28ef, type: 3}
-  quinticSpawn: {fileID: 802881407}
+  doubleCubicSpawn: {fileID: 802881407}
   targetLocation: {fileID: 1023206402}
   quinticSpawnInterval: 6
 --- !u!4 &2022449006

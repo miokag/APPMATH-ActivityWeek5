@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab;
-    public Transform quinticSpawn;
+    public Transform doubleCubicSpawn;
     public Transform targetLocation;
     public float quinticSpawnInterval = 6f;
     
@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(SpawnQuinticEnemies());
+        StartCoroutine(SpawnDoubleCubicEnemies());
     }
 
     private void Update()
@@ -20,11 +20,11 @@ public class EnemySpawner : MonoBehaviour
         if (GameManager.Instance.playerHP <= 0) StopSpawning();
     }
 
-    IEnumerator SpawnQuinticEnemies()
+    IEnumerator SpawnDoubleCubicEnemies()
     {
         while (isSpawning)
         {
-            SpawnEnemy(quinticSpawn, MovementType.DoubleCubic);
+            SpawnEnemy(doubleCubicSpawn, MovementType.DoubleCubic);
             yield return new WaitForSeconds(quinticSpawnInterval);
         }
     }

@@ -26,4 +26,22 @@ public static class TweenUtils
    {
        return Mathf.Pow(t, exponent);
    }
+   
+   // New easing functions:
+   
+   public static float EaseInCubic(float t)
+   {
+       return t * t * t; // t^3
+   }
+
+   public static float EaseOutCirc(float t)
+   {
+       return Mathf.Sqrt(1 - (t - 1) * (t - 1)); // sqrt(1 - (t-1)^2)
+   }
+
+   public static float EaseInQuad(float t)
+   {
+       return t * t; // t^2 (same as EaseIn but explicit)
+   }
+   
 }

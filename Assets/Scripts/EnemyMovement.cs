@@ -41,7 +41,7 @@ public class EnemyMovement : MonoBehaviour
         
         float t = (Time.time - startTime) / journeyTime;
         t = Mathf.Clamp01(t);
-        t = TweenUtils.EaseOut(t); // Default easing to EaseIn
+        t = TweenUtils.EaseOutCirc(t);
 
         if (t >= 1f)
         {
